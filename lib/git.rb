@@ -2,7 +2,6 @@ require 'git/blob'
 
 class Git
   BIN = `which git`.strip
-  attr_accessor :extractor
   attr_reader :blobs, :base_dir
 
   ALLOWED_COMMAND = [
@@ -28,10 +27,10 @@ class Git
   end
   
   def parse_log(log)
-    @extractor ||= Git::Blob::Extractor.new
+    extractor = Git::Blob::Extractor.new
     blob = nil
     log.each_line do |line|
-      attribute, value = @extractor.parse(line)  
+      attribute, value = extractor.parse(line)  
       if attribute == :commit and not blob.nil?
         @blobs.push blob
         blob = Git::Blob.new
