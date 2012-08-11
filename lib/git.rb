@@ -38,7 +38,7 @@ class Git
       elsif blob.nil?
         blob = Git::Blob.new
       end
-      blob.add_attriubte(attribute, value)
+      blob.add_attribute(attribute, value)
     end
     @blobs.push blob
 

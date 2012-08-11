@@ -11,7 +11,7 @@ class Git
       @diff    ||= args[:diff]
     end
 
-    def add_attriubte(key, value)
+    def add_attribute(key, value)
       if key == :diff or key == :message
         setter = (key.to_s + '=').to_s
         previous_value = self.send(key)
