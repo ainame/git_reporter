@@ -11,7 +11,7 @@ class Git
 
   def initialize(path = nil)
     @blobs = []
-    @base_dir = path || '/Users/namai/.emacs.d'|| `pwd`.strip
+    @base_dir = path || `pwd`.strip
     raise NotAGitRepositoryError unless is_a_git_repository?      
   end
 
