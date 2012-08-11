@@ -8,6 +8,9 @@ class Git
     :status, :log, :fetch, :diff, :show
   ].freeze
 
+  class NotAGitRepositoryError < StandardError; end
+  class NotAllowCommandError < StandardError; end
+
   def initialize(path = nil)
     @blobs = []
     @base_dir = path || `pwd`.strip
@@ -74,8 +77,5 @@ class Git
   def execute(command)
     `#{command}`
   end
-
- class NotAGitRepositoryError < StandardError; end
- class NotAllowCommandError < StandardError; end
 
 end
