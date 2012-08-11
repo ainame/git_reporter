@@ -12,7 +12,7 @@ class Git
   def initialize(path = nil)
     @blobs = []
     @base_dir = path || `pwd`.strip
-    raise NotAGitRepositoryError unless is_a_git_repository?      
+    raise NotAGitRepositoryError unless git_repository?      
   end
 
   def fetch
@@ -45,7 +45,7 @@ class Git
     nil
   end
 
-  def is_a_git_repository?
+  def git_repository?
     !(invoke(:status) =~ /fatal: Not a git repository/)
   end
 
