@@ -5,24 +5,27 @@ class Git
   attr_reader :blobs, :base_dir
 
   ALLOWED_COMMAND = [
-    :status, :log, :fetch, :diff, :show
+    :status, :log, :fetch, :diff, :show, :pull
   ].freeze
 
+  class NotGitBinaryError < StandardError; end
   class NotAGitRepositoryError < StandardError; end
   class NotAllowCommandError < StandardError; end
 
   def initialize(path = nil)
+    raise NotGitBinaryError unless BIN =~ /git/
+    raise NotAGitRepositoryError unless git_repository?      
+
     @blobs = []
     @base_dir = path || `pwd`.strip
-    raise NotAGitRepositoryError unless git_repository?      
   end
 
-  def fetch
-    
+  def fetch(*options)
+    invoke(:fetch, *options)
   end
 
-  def pull
-    
+  def pull(*options)
+    invoke(:pull, *options)
   end
 
   def log(*options)
@@ -47,11 +50,11 @@ class Git
     nil
   end
 
+  private
+
   def git_repository?
     !(invoke(:status) =~ /fatal: Not a git repository/)
   end
-
-  private
 
   def invoke(subcommand, *options)
     raise NotAllowedCommandError unless ALLOWED_COMMAND.include?(subcommand)
