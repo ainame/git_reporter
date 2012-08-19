@@ -11,7 +11,8 @@ class Git
   class NotAllowCommandError < StandardError; end
 
   ALLOWED_COMMAND = [
-    :status, :log, :fetch, :diff, :show, :checkout, :pull
+    :status, :log, :fetch, :diff, :show, :checkout, :pull,
+    :'rev-parse', 
   ].freeze
 
   ALLOWED_COMMAND.each do |command| 
@@ -49,7 +50,7 @@ class Git
   private
 
   def parse_base_dir(path = nil)
-    `git rev-parse --show-toplevel`.chomp
+    invoke(:'rev-parse', '--show-toplevel').chomp
   end
 
   def git_repository?
