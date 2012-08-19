@@ -70,7 +70,7 @@ class Git
     ["#{BIN} #{subcommand}", *options].join(' ')
   end
 
-  def evaluate_with(path)
+  def evaluate_with_dir(path)
     return nil unless block_given?
 
     Dir.chdir(path) do
@@ -79,7 +79,7 @@ class Git
   end
 
   def evaluate_with_base_dir(&block)
-    evaluate_with(@base_dir, &block)
+    evaluate_with_dir(@base_dir, &block)
   end
 
   def execute(command)
