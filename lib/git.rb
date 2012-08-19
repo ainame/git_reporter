@@ -13,11 +13,11 @@ class Git
   class NotAllowCommandError < StandardError; end
 
   def initialize(path = nil)
-    raise NotGitBinaryError unless BIN =~ /git/
-    raise NotAGitRepositoryError unless git_repository?      
-
     @blobs = []
     @base_dir = path || `pwd`.strip
+
+    raise NotGitBinaryError unless BIN =~ /git/
+    raise NotAGitRepositoryError unless git_repository?      
   end
 
   def fetch(*options)
