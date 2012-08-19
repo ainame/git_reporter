@@ -22,7 +22,7 @@ class Git
 
   def initialize(path = nil)
     @blobs = []
-    @base_dir = path || `pwd`.strip
+    @base_dir = parse_base_dir(path || `pwd`.strip)
 
     raise NotGitBinaryError unless BIN =~ /git/
     raise NotAGitRepositoryError unless git_repository?      
@@ -47,6 +47,10 @@ class Git
   end
 
   private
+
+  def parse_base_dir(path = nil)
+    `git rev-parse --show-toplevel`.chomp
+  end
 
   def git_repository?
     !(invoke(:status) =~ /fatal: Not a git repository/)
