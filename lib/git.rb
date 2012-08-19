@@ -56,7 +56,7 @@ class Git
     raise NotAllowedCommandError unless ALLOWED_COMMAND.include?(subcommand)
     command = build_command(subcommand, *options)
 
-    with_base_dir_execution do
+    evaluate_with_base_dir do
       execute(command)
     end
   end
@@ -65,12 +65,16 @@ class Git
     ["#{BIN} #{subcommand}", *options].join(' ')
   end
 
-  def with_base_dir_execution()
+  def evaluate_with(path)
     return nil unless block_given?
 
-    Dir.chdir(@base_dir) do
+    Dir.chdir(path) do
       yield
     end
+  end
+
+  def evaluate_with_base_dir(&block)
+    evaluate_with(@base_dir, &block)
   end
 
   def execute(command)
