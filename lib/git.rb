@@ -1,4 +1,5 @@
 require 'git/blob'
+require 'git/blob/extractor'
 
 class Git
   BIN = `which git`.strip
