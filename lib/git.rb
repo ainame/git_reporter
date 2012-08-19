@@ -97,6 +97,10 @@ class Git
     invoke(:checkout, before_branch)
   end
 
+  def evaluate_with_master_branch(&block)
+    evaluate_with_branch('master', &block)
+  end
+
   def execute(command)
     `#{command}`
   end
