@@ -2,16 +2,23 @@ require 'git/blob'
 require 'git/blob/extractor'
 
 class Git
+  # dependent 'which' command 
   BIN = `which git`.strip
   attr_reader :blobs, :base_dir
-
-  ALLOWED_COMMAND = [
-    :status, :log, :fetch, :diff, :show, :pull
-  ].freeze
 
   class NotGitBinaryError < StandardError; end
   class NotAGitRepositoryError < StandardError; end
   class NotAllowCommandError < StandardError; end
+
+  ALLOWED_COMMAND = [
+    :status, :log, :fetch, :diff, :show, :checkout, :pull
+  ].freeze
+
+  ALLOWED_COMMAND.each do |command| 
+    define_method(command) do |*options|
+      invoke(command, *options)
+    end
+  end
 
   def initialize(path = nil)
     @blobs = []
@@ -20,19 +27,7 @@ class Git
     raise NotGitBinaryError unless BIN =~ /git/
     raise NotAGitRepositoryError unless git_repository?      
   end
-
-  def fetch(*options)
-    invoke(:fetch, *options)
-  end
-
-  def pull(*options)
-    invoke(:pull, *options)
-  end
-
-  def log(*options)
-    invoke(:log, *options)
-  end
-  
+ 
   def parse_log(log)
     extractor = Git::Blob::Extractor.new
     blob = nil
