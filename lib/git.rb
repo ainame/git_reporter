@@ -9,6 +9,7 @@ class Git
   class NotGitBinaryError < StandardError; end
   class NotAGitRepositoryError < StandardError; end
   class NotAllowCommandError < StandardError; end
+  class AbnormalExitError < StandardError; end
 
   ALLOWED_COMMAND = [
     :status, :log, :fetch, :diff, :show, :checkout, :pull,
@@ -90,8 +91,11 @@ class Git
     command = build_command(subcommand, *options)
 
     evaluate_with_base_dir do
-      execute(command)
+      result, status = execute(command)
     end
+    raise AbnormalExitError, result unless status.success?
+
+    return result
   end
    
   def build_command(subcommand, *options)
