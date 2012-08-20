@@ -92,13 +92,10 @@ class Git
   def invoke(subcommand, *options)
     raise NotAllowedCommandError unless ALLOWED_COMMAND.include?(subcommand)
     command = build_command(subcommand, *options)
-
-    evaluate_with_base_dir do
-      result, status = execute(command)
-    end
+    result, status = execute(command)
     raise AbnormalExitError, result unless status.success?
 
-    return result
+    result
   end 
 
   def build_command(subcommand, *options)
