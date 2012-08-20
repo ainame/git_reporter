@@ -47,6 +47,34 @@ class Git
     nil
   end
 
+  def current_branch()
+    # $ git branch
+    # * master
+    invoke(:branch).split[1]
+  end
+
+  def evaluate_with_base_dir(&block)
+    evaluate_with_dir(@base_dir, &block)
+  end
+
+  def evaluate_with_branch(branch)
+    return nil unless block_given?
+
+    before_branch = current_branch
+    invoke(:checkout, branch)
+    yield
+    invoke(:checkout, before_branch)
+  end
+
+  def evaluate_with_master_branch(&block)
+    evaluate_with_branch('master', &block)
+  end
+
+  def execute(command)
+    result = `#{command}`
+    return result, $?
+  end
+
   private
 
   def parse_base_dir(path = nil)
@@ -78,31 +106,5 @@ class Git
     end
   end
 
-  def current_branch()
-    # $ git branch
-    # * master
-    invoke(:branch).split[1]
-  end
-
-  def evaluate_with_base_dir(&block)
-    evaluate_with_dir(@base_dir, &block)
-  end
-
-  def evaluate_with_branch(branch)
-    return nil unless block_given?
-
-    before_branch = current_branch
-    invoke(:checkout, branch)
-    yield
-    invoke(:checkout, before_branch)
-  end
-
-  def evaluate_with_master_branch(&block)
-    evaluate_with_branch('master', &block)
-  end
-
-  def execute(command)
-    `#{command}`
-  end
 
 end
