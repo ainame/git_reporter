@@ -54,6 +54,14 @@ class Git
     invoke(:branch).split[1]
   end
 
+  def evaluate_with_dir(path)
+    return nil unless block_given?
+
+    Dir.chdir(path) do
+      yield
+    end
+  end
+
   def evaluate_with_base_dir(&block)
     evaluate_with_dir(@base_dir, &block)
   end
@@ -69,11 +77,6 @@ class Git
 
   def evaluate_with_master_branch(&block)
     evaluate_with_branch('master', &block)
-  end
-
-  def execute(command)
-    result = `#{command}`
-    return result, $?
   end
 
   private
@@ -96,19 +99,15 @@ class Git
     raise AbnormalExitError, result unless status.success?
 
     return result
-  end
-   
+  end 
+
   def build_command(subcommand, *options)
     ["#{BIN} #{subcommand}", *options].join(' ')
   end
 
-  def evaluate_with_dir(path)
-    return nil unless block_given?
-
-    Dir.chdir(path) do
-      yield
-    end
+  def execute(command)
+    result = `#{command}`
+    return result, $?
   end
-
 
 end
